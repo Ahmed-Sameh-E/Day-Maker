@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <title>Day Maker</title>
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+  <body class="container" id="container">
+    <header>
+      <div class="header-container">
+        <div class="logo">
+          <h1>Day Maker</h1>
+          <span>27 june</span>
+        </div>
+        <div class="avatar-profile">
+          <div class="avatar">Ah</div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- ------------home section------------- -->
+      <div class="page-content active" id="home">
+        <div class="home-container">
+          <div class="greeting section">
+            <div>
+              <h2>welcome back, Ahmed</h2>
+              <span>quote</span>
+            </div>
+            <div class="streak-box">
+              <span>Day 3 <i class="fa-solid fa-fire streak-fire"></i></span>
+            </div>
+          </div>
+
+          <div class="tasks section">
+            <div class="tasks-header" id="tasks-header">
+              <h3>To do list</h3>
+              <button><i class="fa-solid fa-plus"></i></button>
+            </div>
+            <div class="tasks-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-content" id="stats">stats page</div>
+
+      <div class="page-content" id="calendar">calender page</div>
+
+      <div class="page-content" id="profile">profile page</div>
+    </main>
+
+    <nav>
+      <div class="navbar-container">
+        <div class="slider-indicator"></div>
+
+        <button
+          class="mob-navbar-btn active-mob"
+          id="mobile-home-btn"
+          onclick="switchPage('home')"
+        >
+          <i class="fa-solid fa-home"></i>
+          <span>Home</span>
+        </button>
+
+        <button
+          class="mob-navbar-btn"
+          id="mobile-stats-btn"
+          onclick="switchPage('stats')"
+        >
+          <i class="fa-solid fa-chart-simple"></i>
+          <span>Stats</span>
+        </button>
+
+        <button
+          class="mob-navbar-btn"
+          id="mobile-calendar-btn"
+          onclick="switchPage('calendar')"
+        >
+          <i class="fa-solid fa-calendar-day"></i>
+          <span>Calendar</span>
+        </button>
+
+        <button
+          class="mob-navbar-btn"
+          id="mobile-profile-btn"
+          onclick="switchPage('profile')"
+        >
+          <i class="fa-solid fa-user"></i>
+          <span>Profile</span>
+        </button>
+      </div>
+    </nav>
+
+    <script src="js/dashboard.js"></script>
+  </body>
+</html>
