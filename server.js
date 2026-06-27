@@ -3,7 +3,9 @@ const app = express();
 const path = require('path');
 
 app.use(express.json());
-app.use(express.static(__dirname));
+app.use('/css', express.static(path.join(__dirname, 'css')));
+app.use('/js', express.static(path.join(__dirname, 'js')));
+
 
 const usersDatabase = [
     { name: "Ahmed", email: "test@gmail.com", password: "123456" }
