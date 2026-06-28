@@ -71,6 +71,10 @@ header {
   z-index: 1000;
 }
 
+button:focus {
+  outline: none;
+}
+
 .header-container {
   display: flex;
   width: 92%;
