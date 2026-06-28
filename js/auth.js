@@ -14,17 +14,16 @@ if (registerBtn && loginBtn && container) {
 
 const mobLoginBtn = document.getElementById("mobile-login-btn");
 const mobRegisterBtn = document.getElementById("mobile-register-btn");
-const containerElement = document.getElementById("container");
 
-if (mobLoginBtn && mobRegisterBtn && containerElement) {
+if (mobLoginBtn && mobRegisterBtn && container) {
   mobRegisterBtn.addEventListener("click", () => {
-    containerElement.classList.add("active");
+    container.classList.add("active");
     mobRegisterBtn.classList.add("active-mob");
     mobLoginBtn.classList.remove("active-mob");
   });
 
   mobLoginBtn.addEventListener("click", () => {
-    containerElement.classList.remove("active");
+    container.classList.remove("active");
     mobLoginBtn.classList.add("active-mob");
     mobRegisterBtn.classList.remove("active-mob");
   });
