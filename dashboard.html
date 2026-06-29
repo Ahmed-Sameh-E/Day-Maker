@@ -22,10 +22,10 @@
   </head>
   <body class="container" id="container">
     <header>
-      <div class="header-container">
-        <div class="logo">
+      <div class="header-container" >
+        <div class="logo" id="date">
           <h1>Day Maker</h1>
-          <span>27 june</span>
+          <span id="live-clock"></span>
         </div>
         <div class="avatar-profile">
           <div class="avatar">Ah</div>
@@ -34,8 +34,9 @@
     </header>
 
     <main>
-      <!-- ------------home section------------- -->
-      <div class="page-content active" id="home">
+      <!-- home section -->
+
+      <div class="page-content" id="home">
         <div class="home-container">
           <div class="greeting section">
             <div>
@@ -50,14 +51,25 @@
           <div class="tasks section">
             <div class="tasks-header" id="tasks-header">
               <h3>To do list</h3>
-              <button onclick="addTask('New Task')"><i class="fa-solid fa-plus"></i></button>
+              <button onclick="openModal()">
+                <i class="fa-solid fa-plus"></i>
+              </button>
             </div>
             <div class="tasks-list" id="tasks-list"></div>
           </div>
         </div>
       </div>
 
-      <div class="page-content" id="stats">stats page</div>
+      <!-- stats section -->
+
+      <div class="page-content active" id="stats">
+        <div class="stats-container">
+          <div class="tasks-stats section">
+            <div class="tasks-completed"></div>
+            <div class="tasks-incompleted"></div>
+          </div>
+        </div>
+      </div>
 
       <div class="page-content" id="calendar">calender page</div>
 
@@ -105,6 +117,38 @@
         </button>
       </div>
     </nav>
+
+    <div class="modal-overlay" id="task-modal">
+      <div class="modal-card">
+        <h2>Add New Task</h2>
+
+        <div class="modal-inputs">
+          <input
+            type="text"
+            id="modal-task-name"
+            placeholder="What do you want to do?"
+          />
+
+          <div class="time-toggle-section">
+            <input type="text" id="modal-task-time" placeholder="10:00 AM" />
+            <label class="switch">
+              <input type="checkbox" id="no-time-checkbox" />
+              <span class="slider"></span>
+            </label>
+            <span class="toggle-text">No Time</span>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="modal-btn cancel" onclick="closeModal()">
+            Cancel
+          </button>
+          <button class="modal-btn save" onclick="saveModalTask()">
+            Save Task
+          </button>
+        </div>
+      </div>
+    </div>
 
     <script src="js/dashboard.js"></script>
   </body>

@@ -56,40 +56,77 @@ function switchPage(pageId) {
   document.getElementById(pageId).classList.add("active");
 }
 
-function addTask(taskText) {
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const date = new Date()
+setInterval(() => {
+  document.getElementById("live-clock").innerText = months[data.getMonth()];
+}, 1000);
+
+function openModal() {
+  document.getElementById("task-modal").classList.add("show");
+  document.getElementById("modal-task-name").value = "";
+  document.getElementById("modal-task-time").value = "";
+  document.getElementById("no-time-checkbox").checked = false;
+  document.getElementById("modal-task-time").style.display = "block";
+  document.getElementById("modal-task-name").focus();
+}
+
+function closeModal() {
+  document.getElementById("task-modal").classList.remove("show");
+}
+
+document
+  .getElementById("no-time-checkbox")
+  .addEventListener("change", function () {
+    const timeInput = document.getElementById("modal-task-time");
+    if (this.checked) {
+      timeInput.style.display = "none";
+    } else {
+      timeInput.style.display = "block";
+    }
+  });
+
+function saveModalTask() {
+  const taskName = document.getElementById("modal-task-name").value.trim();
+  let taskTime = document.getElementById("modal-task-time").value.trim();
+  const noTimeChecked = document.getElementById("no-time-checkbox").checked;
+
+  if (taskName === "") {
+    alert("Please enter a task name!");
+    return;
+  }
+
+  if (noTimeChecked || taskTime === "") {
+    taskTime = "";
+  }
+
   const taskItem = document.createElement("div");
   taskItem.classList.add("task-item");
 
   taskItem.innerHTML = `
     <div class="task-left">
       <span class="check-circle"></span>
-      <input type="text" class="task-input-name" value="${taskText}" placeholder="New Task...">
+      <input type="text" class="task-input-name" value="${taskName}" placeholder="New Task...">
     </div>
-    <input type="text" class="task-input-time" value="10:00 AM" placeholder="Time...">
+    <input type="text" class="task-input-time" value="${taskTime}" placeholder="Time..." ${taskTime === "" ? 'style="display:none;"' : ""}>
   `;
 
   tasksList.appendChild(taskItem);
-  
-  taskItem.querySelector('.task-input-name').focus();
+  closeModal();
 
-  const nameInput = taskItem.querySelector('.task-input-name');
-  const timeInput = taskItem.querySelector('.task-input-time');
+  const nameInput = taskItem.querySelector(".task-input-name");
+  const timeInput = taskItem.querySelector(".task-input-time");
+  const circle = taskItem.querySelector(".check-circle");
 
-  nameInput.addEventListener('blur', () => {
-    if (nameInput.value.trim() === "") {
-      nameInput.value = "Untitled Task";
-    }
+  nameInput.addEventListener("blur", () => {
+    if (nameInput.value.trim() === "") nameInput.value = "Untitled Task";
   });
 
-  timeInput.addEventListener('blur', () => {
-    if (timeInput.value.trim() === "") {
-      timeInput.value = "12:00 PM";
-    }
+  timeInput.addEventListener("blur", () => {
+    if (timeInput.value.trim() === "") timeInput.value = "12:00 PM";
   });
 
-  const circle = taskItem.querySelector('.check-circle');
-  
-  circle.addEventListener('click', () => {
-    taskItem.classList.toggle('checked');
+  circle.addEventListener("click", () => {
+    taskItem.classList.toggle("checked");
   });
 }
