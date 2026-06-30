@@ -1,3 +1,7 @@
+if (!localStorage.getItem("dashboardUsername")) {
+  window.location.replace("/");
+}
+
 const mobHomBtn = document.getElementById("mobile-home-btn");
 const mobStatsBtn = document.getElementById("mobile-stats-btn");
 const mobCalendarBtn = document.getElementById("mobile-calendar-btn");
@@ -56,11 +60,116 @@ function switchPage(pageId) {
   document.getElementById(pageId).classList.add("active");
 }
 
-const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-const date = new Date()
-setInterval(() => {
-  document.getElementById("live-clock").innerText = months[data.getMonth()];
-}, 1000);
+function initializeDashboard() {
+  const storedName = localStorage.getItem("dashboardUsername") || "Guest";
+  const greetingEl = document.getElementById("user-name");
+  if (greetingEl) {
+    greetingEl.innerText = `Welcome back, ${storedName}`;
+  }
+
+  const avatarEl = document.getElementById("avatar");
+  if (avatarEl) {
+    const initials = storedName
+      .split(" ")
+      .map((word) => word.charAt(0))
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+    avatarEl.innerText = initials || "GU";
+    avatarEl.title = storedName;
+  }
+  const quotes = [
+    "Make today worth remembering.",
+    "Your future is created by what you do today, not tomorrow.",
+    "Small steps in the right direction can turn out to be the biggest steps of your life.",
+    "Focus on progress, not perfection.",
+    "Believe you can and you're halfway there.",
+    "Today is another chance to get better.",
+    "Productivity is being able to do things that you were never able to do before.",
+  ];
+  const quoteEl = document.querySelector(".greeting.section span");
+  if (quoteEl) {
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    quoteEl.innerText = quotes[randomIndex];
+  }
+}
+
+function manageStudyStreak() {
+  const streakCountEl = document.getElementById("streak-count");
+  const logBtn = document.getElementById("complete-study-btn");
+
+  if (!streakCountEl || !logBtn) return;
+
+  let currentStreak = parseInt(localStorage.getItem("studyStreak")) || 0;
+  const lastStudyDate = localStorage.getItem("lastStudyDate");
+  const todayStr = new Date().toISOString().split("T")[0];
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+  if (lastStudyDate && lastStudyDate !== todayStr && lastStudyDate !== yesterdayStr) {
+    currentStreak = 0;
+    localStorage.setItem("studyStreak", 0);
+  }
+
+  streakCountEl.innerText = `${currentStreak} ${currentStreak === 1 ? "Day" : "Days"}`;
+
+  if (lastStudyDate && lastStudyDate === todayStr) {
+    logBtn.innerText = "Studied Today ✓";
+    logBtn.disabled = true;
+  } else {
+    logBtn.innerText = "Log Today's Study";
+    logBtn.disabled = false;
+  }
+
+  const newLogBtn = logBtn.cloneNode(true);
+  logBtn.parentNode.replaceChild(newLogBtn, logBtn);
+
+  newLogBtn.addEventListener("click", () => {
+    let streak = parseInt(localStorage.getItem("studyStreak")) || 0;
+    const lastDate = localStorage.getItem("lastStudyDate");
+    const currentToday = new Date().toISOString().split("T")[0];
+
+    if (lastDate === currentToday) return;
+
+    if (lastDate === yesterdayStr) {
+      streak += 1;
+    } else {
+      streak = 1;
+    }
+
+    localStorage.setItem("studyStreak", streak);
+    localStorage.setItem("lastStudyDate", currentToday);
+
+    streakCountEl.innerText = `${streak} ${streak === 1 ? "Day" : "Days"}`;
+    newLogBtn.innerText = "Studied Today ✓";
+    newLogBtn.disabled = true;
+
+    Swal.fire({
+      icon: "success",
+      title: "Streak Updated!",
+      text: `You are on a ${streak}-day study streak! Keep it up.`,
+      timer: 2000,
+      showConfirmButton: false,
+      heightAuto: false,
+    });
+  });
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  initializeDashboard();
+  manageStudyStreak();
+  
+  const dateObj = new Date();
+  const day = String(dateObj.getDate()).padStart(2, "0");
+  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const year = dateObj.getFullYear();
+  const clockEl = document.getElementById("live-clock");
+  if(clockEl) {
+    clockEl.innerText = `${day}/${month}/${year}`;
+  }
+});
 
 function openModal() {
   document.getElementById("task-modal").classList.add("show");
@@ -129,4 +238,9 @@ function saveModalTask() {
   circle.addEventListener("click", () => {
     taskItem.classList.toggle("checked");
   });
+}
+
+function logoutUser() {
+  localStorage.removeItem("dashboardUsername");
+  window.location.replace("/logout");
 }

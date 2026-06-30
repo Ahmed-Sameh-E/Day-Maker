@@ -37,6 +37,7 @@ if (signUpForm) {
     const name = document.getElementById("userName").value;
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
+    localStorage.setItem("dashboardUsername", name);
 
     fetch("/api/signup", {
       method: "POST",
@@ -55,7 +56,7 @@ if (signUpForm) {
             heightAuto: false,
           }).then(() => {
             container.classList.remove("active");
-            window.location.href = data.redirect;
+            window.location.replace(data.redirect);
           });
         } else {
           Swal.fire({
@@ -94,6 +95,10 @@ if (signInForm) {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
+          if (data.name) {
+            localStorage.setItem("dashboardUsername", data.name);
+          }
+
           Swal.fire({
             icon: "success",
             title: "Login Successful",
@@ -102,7 +107,7 @@ if (signInForm) {
             showConfirmButton: false,
             heightAuto: false,
           }).then(() => {
-            window.location.href = data.redirect;
+            window.location.replace(data.redirect);
           });
         } else {
           Swal.fire({

@@ -18,33 +18,41 @@
     />
     <title>Day Maker</title>
     <link rel="stylesheet" href="/css/dashboard.css" />
-    <link rel="stylesheet" href="css/dashboard.css" />
   </head>
   <body class="container" id="container">
     <header>
-      <div class="header-container" >
+      <div class="header-container">
         <div class="logo" id="date">
           <h1>Day Maker</h1>
           <span id="live-clock"></span>
         </div>
         <div class="avatar-profile">
-          <div class="avatar">Ah</div>
+          <div class="avatar" id="avatar"></div>
         </div>
       </div>
     </header>
 
     <main>
-      <!-- home section -->
-
-      <div class="page-content" id="home">
+      <div class="page-content active" id="home">
         <div class="home-container">
           <div class="greeting section">
             <div>
-              <h2>welcome back, Ahmed</h2>
+              <h2 id="user-name">welcome back,</h2>
               <span>quote</span>
             </div>
-            <div class="streak-box">
-              <span>Day 3 <i class="fa-solid fa-fire streak-fire"></i></span>
+            <div class="streak-box section">
+              <div class="streak-content">
+                <div class="streak-icon">
+                  <i class="fa-solid fa-fire"></i>
+                </div>
+                <div class="streak-text">
+                  <h3 id="streak-count">0 Days</h3>
+                  <span>Current Study Streak</span>
+                </div>
+              </div>
+              <button id="complete-study-btn" class="streak-btn">
+                Log Today's Study
+              </button>
             </div>
           </div>
 
@@ -60,9 +68,7 @@
         </div>
       </div>
 
-      <!-- stats section -->
-
-      <div class="page-content active" id="stats">
+      <div class="page-content" id="stats">
         <div class="stats-container">
           <div class="tasks-stats section">
             <div class="tasks-completed"></div>
@@ -73,7 +79,18 @@
 
       <div class="page-content" id="calendar">calender page</div>
 
-      <div class="page-content" id="profile">profile page</div>
+      <div class="page-content" id="profile">
+        <div class="avatar-profile">
+          <div class="avatar" id="avatar"></div>
+          <button
+            onclick="logoutUser()"
+            class="streak-btn"
+            style="margin-left: 10px; background: #ff6b6b"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
     </main>
 
     <nav>
@@ -150,6 +167,7 @@
       </div>
     </div>
 
-    <script src="js/dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/dashboard.js"></script>
   </body>
 </html>
