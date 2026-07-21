@@ -1,53 +1,30 @@
 if (!localStorage.getItem("dashboardUsername")) {
   window.location.replace("/");
 }
-
-const mobHomBtn = document.getElementById("mobile-home-btn");
-const mobStatsBtn = document.getElementById("mobile-stats-btn");
-const mobCalendarBtn = document.getElementById("mobile-calendar-btn");
-const mobProfileBtn = document.getElementById("mobile-profile-btn");
 const containerElement = document.getElementById("container");
 const tasksList = document.getElementById("tasks-list");
 
-const buttons = [mobHomBtn, mobStatsBtn, mobCalendarBtn, mobProfileBtn];
+function setActiveNav(pageId) {
+  const pageClasses = {
+    home: null,
+    stats: "active1",
+    calendar: "active2",
+    profile: "active3",
+  };
 
-function setActiveButton(activeBtn, activeClass) {
-  containerElement.classList.remove("active1", "active2", "active3");
-
-  if (activeClass) {
-    containerElement.classList.add(activeClass);
+  if (containerElement) {
+    containerElement.classList.remove("active1", "active2", "active3");
+    if (pageClasses[pageId]) {
+      containerElement.classList.add(pageClasses[pageId]);
+    }
   }
 
-  buttons.forEach((btn) => {
-    if (btn === activeBtn) {
-      btn.classList.add("active-mob");
-    } else {
-      btn.classList.remove("active-mob");
-    }
-  });
-}
-
-if (
-  mobHomBtn &&
-  mobStatsBtn &&
-  mobCalendarBtn &&
-  mobProfileBtn &&
-  containerElement
-) {
-  mobHomBtn.addEventListener("click", () => {
-    setActiveButton(mobHomBtn, null);
+  document.querySelectorAll(".desk-nav-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.page === pageId);
   });
 
-  mobStatsBtn.addEventListener("click", () => {
-    setActiveButton(mobStatsBtn, "active1");
-  });
-
-  mobCalendarBtn.addEventListener("click", () => {
-    setActiveButton(mobCalendarBtn, "active2");
-  });
-
-  mobProfileBtn.addEventListener("click", () => {
-    setActiveButton(mobProfileBtn, "active3");
+  document.querySelectorAll(".mob-navbar-btn").forEach((btn) => {
+    btn.classList.toggle("active-mob", btn.dataset.page === pageId);
   });
 }
 
@@ -57,7 +34,12 @@ function switchPage(pageId) {
     page.classList.remove("active");
   });
 
-  document.getElementById(pageId).classList.add("active");
+  const targetPage = document.getElementById(pageId);
+  if (targetPage) {
+    targetPage.classList.add("active");
+  }
+
+  setActiveNav(pageId);
 }
 
 function initializeDashboard() {
@@ -160,13 +142,14 @@ function manageStudyStreak() {
 window.addEventListener("DOMContentLoaded", () => {
   initializeDashboard();
   manageStudyStreak();
-  
+  switchPage("home");
+
   const dateObj = new Date();
   const day = String(dateObj.getDate()).padStart(2, "0");
   const month = String(dateObj.getMonth() + 1).padStart(2, "0");
   const year = dateObj.getFullYear();
   const clockEl = document.getElementById("live-clock");
-  if(clockEl) {
+  if (clockEl) {
     clockEl.innerText = `${day}/${month}/${year}`;
   }
 });

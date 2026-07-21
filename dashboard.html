@@ -18,6 +18,21 @@
     />
     <title>Day Maker</title>
     <link rel="stylesheet" href="/css/dashboard.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <script type="text/javascript">
+      (function (c, l, a, r, i, t, y) {
+        c[a] =
+          c[a] ||
+          function () {
+            (c[a].q = c[a].q || []).push(arguments);
+          };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+      })(window, document, "clarity", "script", "xp4jbyjk4q");
+    </script>
   </head>
   <body class="container" id="container">
     <header>
@@ -93,13 +108,14 @@
       </div>
     </main>
 
-    <nav>
+    <nav class="mob-nav">
       <div class="navbar-container">
         <div class="slider-indicator"></div>
 
         <button
           class="mob-navbar-btn active-mob"
           id="mobile-home-btn"
+          data-page="home"
           onclick="switchPage('home')"
         >
           <i class="fa-solid fa-home"></i>
@@ -109,6 +125,7 @@
         <button
           class="mob-navbar-btn"
           id="mobile-stats-btn"
+          data-page="stats"
           onclick="switchPage('stats')"
         >
           <i class="fa-solid fa-chart-simple"></i>
@@ -118,6 +135,7 @@
         <button
           class="mob-navbar-btn"
           id="mobile-calendar-btn"
+          data-page="calendar"
           onclick="switchPage('calendar')"
         >
           <i class="fa-solid fa-calendar-day"></i>
@@ -127,6 +145,7 @@
         <button
           class="mob-navbar-btn"
           id="mobile-profile-btn"
+          data-page="profile"
           onclick="switchPage('profile')"
         >
           <i class="fa-solid fa-user"></i>
@@ -134,6 +153,44 @@
         </button>
       </div>
     </nav>
+
+    <aside class="big-nav">
+      <button
+        class="desk-nav-btn active"
+        data-page="home"
+        onclick="switchPage('home')"
+      >
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+      </button>
+
+      <button
+        class="desk-nav-btn"
+        data-page="stats"
+        onclick="switchPage('stats')"
+      >
+        <i class="fa-solid fa-chart-simple"></i>
+        <span>Stats</span>
+      </button>
+
+      <button
+        class="desk-nav-btn"
+        data-page="calendar"
+        onclick="switchPage('calendar')"
+      >
+        <i class="fa-solid fa-calendar-day"></i>
+        <span>Calendar</span>
+      </button>
+
+      <button
+        class="desk-nav-btn"
+        data-page="profile"
+        onclick="switchPage('profile')"
+      >
+        <i class="fa-solid fa-user"></i>
+        <span>Profile</span>
+      </button>
+    </aside>
 
     <div class="modal-overlay" id="task-modal">
       <div class="modal-card">
@@ -169,5 +226,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/js/dashboard.js"></script>
+    <script src="js/dashboard.js"></script>
   </body>
 </html>

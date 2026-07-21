@@ -1,18 +1,37 @@
+require("dotenv").config();
+
 const express = require("express");
 const session = require("express-session");
 const path = require("path");
+const bcrypt = require("bcrypt");
+
+const connectDB = require("./config/db");
+const User = require("./models/User");
+
 const app = express();
 
+const isAdmin = require("./middleware/isAdmin");
+app.get("/admin", isAdmin, (req, res) => {
+    res.send("Welcome Admin");
+});
+
+// Connect to MongoDB
+connectDB();
+
+// Middleware
 app.use(express.json());
+
 app.use("/css", express.static(path.join(__dirname, "css")));
 app.use("/js", express.static(path.join(__dirname, "js")));
 
 app.use(
   session({
-    secret: "my-super-secret-key",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 },
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000,
+    },
   }),
 );
 
@@ -24,14 +43,13 @@ const noCache = (req, res, next) => {
   next();
 };
 
-const usersDatabase = [
-  { name: "Ahmed", email: "test@gmail.com", password: "123456" },
-];
+// Routes
 
 app.get("/", noCache, (req, res) => {
   if (req.session.user) {
     return res.redirect("/dashboard");
   }
+
   res.sendFile(path.join(__dirname, "auth.html"));
 });
 
@@ -39,40 +57,86 @@ app.get("/dashboard", noCache, (req, res) => {
   if (!req.session.user) {
     return res.redirect("/");
   }
+
   res.sendFile(path.join(__dirname, "dashboard.html"));
 });
 
-app.post("/api/signup", (req, res) => {
-  const { name, email, password } = req.body;
+// Signup
+app.post("/api/signup", async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
 
-  const userExists = usersDatabase.find((user) => user.email === email);
-  if (userExists) {
-    return res.json({
+    const userExists = await User.findOne({
+      email: email.toLowerCase(),
+    });
+
+    if (userExists) {
+      return res.json({
+        success: false,
+        message: "This email is already registered!",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await User.create({
+      name,
+      email: email.toLowerCase(),
+      password: hashedPassword,
+    });
+
+    req.session.user = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
+
+    res.json({
+      success: true,
+      message: "Account created successfully!",
+      redirect: "/dashboard",
+    });
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
       success: false,
-      message: "This email is already registered!",
+      message: "Internal Server Error",
     });
   }
-
-  const newUser = { name, email, password };
-  usersDatabase.push(newUser);
-
-  req.session.user = { name: newUser.name, email: newUser.email };
-
-  res.json({
-    success: true,
-    message: `Account created successfully!`,
-    redirect: "/dashboard",
-  });
 });
 
-app.post("/api/login", (req, res) => {
-  const { email, password } = req.body;
-  const user = usersDatabase.find(
-    (u) => u.email === email && u.password === password,
-  );
+// Login
+app.post("/api/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-  if (user) {
-    req.session.user = { name: user.name, email: user.email };
+    const user = await User.findOne({
+      email: email.toLowerCase(),
+    });
+
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "The email or password is incorrect!",
+      });
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      return res.json({
+        success: false,
+        message: "The email or password is incorrect!",
+      });
+    }
+
+    req.session.user = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+    };
 
     res.json({
       success: true,
@@ -80,14 +144,17 @@ app.post("/api/login", (req, res) => {
       message: "Login successful!",
       redirect: "/dashboard",
     });
-  } else {
-    res.json({
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
       success: false,
-      message: "the password or email is incorrect!",
+      message: "Internal Server Error",
     });
   }
 });
 
+// Logout
 app.get("/logout", (req, res) => {
   req.session.destroy(() => {
     res.redirect("/");
@@ -95,6 +162,7 @@ app.get("/logout", (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`🚀 Server is running on port ${PORT}`);
 });

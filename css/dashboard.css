@@ -31,7 +31,7 @@ body {
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  min-height: 100vh;
+  min-height: 100dvh;
   padding-bottom: 90px;
   background:
     radial-gradient(
@@ -117,7 +117,7 @@ main {
   gap: 15px;
 }
 
-nav {
+.mob-nav {
   position: fixed;
   bottom: 15px;
   width: 100%;
@@ -315,16 +315,6 @@ nav {
   background: var(--btn-inactive);
   cursor: not-allowed;
   transform: none;
-}
-
-@media (max-width: 480px) {
-  .streak-box.section {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .streak-btn {
-    width: 100%;
-  }
 }
 
 .tasks {
@@ -598,4 +588,156 @@ input:checked + .slider:before {
   width: 92%;
   padding-top: 10px;
   gap: 15px;
+}
+
+
+/* TODO: do a aside bar that appear in desk only and it completely work */
+
+.big-nav {
+  display: none;
+  position: sticky;
+  top: 20px;
+  left: 10px;
+  width: 78px;
+  height: calc(100dvh - 40px);
+  border-radius: 28px;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px 10px;
+  gap: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: width 0.35s ease, transform 0.2s ease;
+  z-index: 1000;
+}
+
+.big-nav:hover {
+  width: 220px;
+  transform: translateY(-1px);
+}
+
+.desk-nav-btn {
+  width: 100%;
+  height: 54px;
+  border: none;
+  border-radius: 18px;
+  background: transparent;
+  color: var(--btn-inactive);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 0 16px;
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease;
+  position: relative;
+}
+
+.desk-nav-btn i {
+  min-width: 24px;
+  font-size: 20px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.desk-nav-btn span {
+  display: block;
+  white-space: nowrap;
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  transform: translateX(10px);
+  transition: opacity 0.25s ease, transform 0.25s ease, width 0.25s ease;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.big-nav:hover .desk-nav-btn {
+  justify-content: flex-start;
+  gap: 14px;
+}
+
+.big-nav:hover .desk-nav-btn span {
+  width: 70px;
+}
+
+.big-nav:hover .desk-nav-btn span {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.desk-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--text-main);
+  transform: translateY(-1px);
+}
+
+.desk-nav-btn.active {
+  background: rgba(14, 55, 68, 0.08);
+  color: var(--text-main);
+  box-shadow: inset 0 0 0 1px rgba(14, 55, 68, 0.08);
+}
+
+main,
+header {
+  margin-left: 0;
+}
+
+/* @media (max-width: 480px) {
+  .streak-box.section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .streak-btn {
+    width: 100%;
+  }
+} */
+
+@media (min-width: 768px) {
+  .mob-nav {
+    display: none;
+  }
+
+  body {
+    display: grid;
+    grid-template-columns: 90px minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "nav header"
+      "nav main";
+    gap: 0;
+    align-items: start;
+  }
+
+  header {
+    grid-area: header;
+    justify-content: center;
+    padding-left: 6px;
+  }
+
+  main {
+    grid-area: main;
+    justify-content: center;
+    padding-left: 6px;
+  }
+
+  .header-container,
+  .home-container,
+  .stats-container {
+    width: min(100%, 1120px);
+  }
+
+  .big-nav {
+    display: flex;
+    grid-area: nav;
+    position: sticky;
+    top: 20px;
+    left: 10px;
+    margin-left: 10px;
+  }
 }
