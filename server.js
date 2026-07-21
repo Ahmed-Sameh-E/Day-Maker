@@ -11,14 +11,8 @@ const User = require("./models/User");
 const app = express();
 
 const isAdmin = require("./middleware/isAdmin");
-app.get("/admin", isAdmin, (req, res) => {
-    res.send("Welcome Admin");
-});
 
-// Connect to MongoDB
-connectDB();
 
-// Middleware
 app.use(express.json());
 
 app.use("/css", express.static(path.join(__dirname, "css")));
@@ -26,42 +20,58 @@ app.use("/js", express.static(path.join(__dirname, "js")));
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || "fallback_secret_key_2026",
     resave: false,
     saveUninitialized: false,
     cookie: {
       maxAge: 24 * 60 * 60 * 1000,
     },
-  }),
+  })
 );
+
+
+app.use(async (req, res, next) => {
+  if (req.path.startsWith("/api")) {
+    try {
+      await connectDB();
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        message: "Database connection failed",
+      });
+    }
+  }
+  next();
+});
 
 const noCache = (req, res, next) => {
   res.setHeader(
     "Cache-Control",
-    "no-store, no-cache, must-revalidate, private",
+    "no-store, no-cache, must-revalidate, private"
   );
   next();
 };
 
-// Routes
+
+app.get("/admin", isAdmin, (req, res) => {
+  res.send("Welcome Admin");
+});
 
 app.get("/", noCache, (req, res) => {
-  if (req.session.user) {
+  if (req.session && req.session.user) {
     return res.redirect("/dashboard");
   }
-
   res.sendFile(path.join(__dirname, "auth.html"));
 });
 
 app.get("/dashboard", noCache, (req, res) => {
-  if (!req.session.user) {
+  if (!req.session || !req.session.user) {
     return res.redirect("/");
   }
-
   res.sendFile(path.join(__dirname, "dashboard.html"));
 });
 
-// Signup
+
 app.post("/api/signup", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -86,10 +96,10 @@ app.post("/api/signup", async (req, res) => {
     });
 
     req.session.user = {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
+      id: newUser._id,
+      name: newUser.name,
+      email: newUser.email,
+      role: newUser.role,
     };
 
     res.json({
@@ -99,7 +109,6 @@ app.post("/api/signup", async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -107,7 +116,6 @@ app.post("/api/signup", async (req, res) => {
   }
 });
 
-// Login
 app.post("/api/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -136,6 +144,7 @@ app.post("/api/login", async (req, res) => {
       id: user._id,
       name: user.name,
       email: user.email,
+      role: user.role,
     };
 
     res.json({
@@ -146,7 +155,6 @@ app.post("/api/login", async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -154,7 +162,6 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-// Logout
 app.get("/logout", (req, res) => {
   req.session.destroy(() => {
     res.redirect("/");

@@ -1,20 +1,24 @@
 const mongoose = require("mongoose");
 
-async function connectDB() {
-  try {
-    console.log("Node:", process.version);
-    console.log("Mongoose:", mongoose.version);
-    console.log("URI:", process.env.MONGO_URI);
+let isConnected = false;
 
-    await mongoose.connect(process.env.MONGO_URI, {
+async function connectDB() {
+  if (isConnected && mongoose.connection.readyState === 1) {
+    return;
+  }
+
+  try {
+    const db = await mongoose.connect(process.env.MONGO_URI, {
       family: 4,
-      serverSelectionTimeoutMS: 10000,
+      serverSelectionTimeoutMS: 5000,
     });
 
+    isConnected = db.connections[0].readyState === 1;
     console.log("✅ MongoDB Connected");
   } catch (err) {
-    console.error("====== ERROR ======");
+    console.error("====== MONGODB ERROR ======");
     console.error(err);
+    throw err;
   }
 }
 
