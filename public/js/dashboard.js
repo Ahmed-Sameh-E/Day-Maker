@@ -1,6 +1,7 @@
-if (!localStorage.getItem("dashboardUsername")) {
-  window.location.replace("/");
-}
+// if (!localStorage.getItem("dashboardUsername")) {
+//   window.location.replace("/");
+// }
+
 const containerElement = document.getElementById("container");
 const tasksList = document.getElementById("tasks-list");
 
@@ -60,6 +61,7 @@ function initializeDashboard() {
     avatarEl.innerText = initials || "GU";
     avatarEl.title = storedName;
   }
+
   const quotes = [
     "Make today worth remembering.",
     "Your future is created by what you do today, not tomorrow.",
@@ -90,7 +92,11 @@ function manageStudyStreak() {
   yesterday.setDate(yesterday.getDate() - 1);
   const yesterdayStr = yesterday.toISOString().split("T")[0];
 
-  if (lastStudyDate && lastStudyDate !== todayStr && lastStudyDate !== yesterdayStr) {
+  if (
+    lastStudyDate &&
+    lastStudyDate !== todayStr &&
+    lastStudyDate !== yesterdayStr
+  ) {
     currentStreak = 0;
     localStorage.setItem("studyStreak", 0);
   }
@@ -138,21 +144,6 @@ function manageStudyStreak() {
     });
   });
 }
-
-window.addEventListener("DOMContentLoaded", () => {
-  initializeDashboard();
-  manageStudyStreak();
-  switchPage("home");
-
-  const dateObj = new Date();
-  const day = String(dateObj.getDate()).padStart(2, "0");
-  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-  const year = dateObj.getFullYear();
-  const clockEl = document.getElementById("live-clock");
-  if (clockEl) {
-    clockEl.innerText = `${day}/${month}/${year}`;
-  }
-});
 
 function openModal() {
   document.getElementById("task-modal").classList.add("show");
@@ -227,3 +218,77 @@ function logoutUser() {
   localStorage.removeItem("dashboardUsername");
   window.location.replace("/logout");
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  initializeDashboard();
+  manageStudyStreak();
+  switchPage("home");
+
+  const dateObj = new Date();
+  const day = String(dateObj.getDate()).padStart(2, "0");
+  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const year = dateObj.getFullYear();
+  const clockEl = document.getElementById("live-clock");
+  if (clockEl) {
+    clockEl.innerText = `${day}/${month}/${year}`;
+  }
+
+  const avatar = document.getElementById("avatar");
+  const avatarSettings = document.getElementById("avatar-settings");
+
+  if (avatar && avatarSettings) {
+    avatar.addEventListener("click", (event) => {
+      event.stopPropagation();
+      avatarSettings.classList.toggle("active");
+    });
+
+    document.addEventListener("click", (event) => {
+      if (
+        !avatar.contains(event.target) &&
+        !avatarSettings.contains(event.target)
+      ) {
+        avatarSettings.classList.remove("active");
+      }
+    });
+  }
+
+  const logoutBtn = document.querySelector(".logout-btn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      logoutUser();
+    });
+  }
+
+  const darkModeBtn = document.getElementById("darkModeBtn");
+  const themeIcon = document.getElementById("themeIcon");
+  const themeText = document.getElementById("themeText");
+  const body = document.body;
+
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    body.classList.add("dark-mode");
+    if (themeIcon && themeText) {
+      themeIcon.classList.remove("fa-sun");
+      themeIcon.classList.add("fa-moon");
+      themeText.textContent = "Dark Mode";
+    }
+  }
+
+  if (darkModeBtn) {
+    darkModeBtn.addEventListener("click", () => {
+      body.classList.toggle("dark-mode");
+
+      if (body.classList.contains("dark-mode")) {
+        themeIcon.classList.remove("fa-sun");
+        themeIcon.classList.add("fa-moon");
+        themeText.textContent = "Dark Mode";
+        localStorage.setItem("theme", "dark");
+      } else {
+        themeIcon.classList.remove("fa-moon");
+        themeIcon.classList.add("fa-sun");
+        themeText.textContent = "Light Mode";
+        localStorage.setItem("theme", "light");
+      }
+    });
+  }
+});

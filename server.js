@@ -12,11 +12,9 @@ const app = express();
 
 const isAdmin = require("./middleware/isAdmin");
 
-
 app.use(express.json());
 
-app.use("/css", express.static(path.join(__dirname, "css")));
-app.use("/js", express.static(path.join(__dirname, "js")));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   session({
@@ -28,7 +26,6 @@ app.use(
     },
   })
 );
-
 
 app.use(async (req, res, next) => {
   if (req.path.startsWith("/api")) {
@@ -52,7 +49,6 @@ const noCache = (req, res, next) => {
   next();
 };
 
-
 app.get("/admin", isAdmin, (req, res) => {
   res.send("Welcome Admin");
 });
@@ -61,16 +57,15 @@ app.get("/", noCache, (req, res) => {
   if (req.session && req.session.user) {
     return res.redirect("/dashboard");
   }
-  res.sendFile(path.join(__dirname, "auth.html"));
+  res.sendFile(path.join(__dirname, "views", "auth.html"));
 });
 
 app.get("/dashboard", noCache, (req, res) => {
   if (!req.session || !req.session.user) {
     return res.redirect("/");
   }
-  res.sendFile(path.join(__dirname, "dashboard.html"));
+  res.sendFile(path.join(__dirname, "views", "dashboard.html"));
 });
-
 
 app.post("/api/signup", async (req, res) => {
   try {

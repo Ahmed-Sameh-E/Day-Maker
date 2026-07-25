@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+  <!-- line 22 , 44 , 243 remove the comment -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <title>Day Maker</title>
+    <link rel="stylesheet" href="/css/dashboard.css" />
+    <link rel="stylesheet" href="../public/css/dashboard.css" />
+    <script>
+      window.va =
+        window.va ||
+        function () {
+          (window.vaq = window.vaq || []).push(arguments);
+        };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+  </head>
+  <body class="container" id="container">
+    <div class="app-container">
+      <header>
+        <div class="header-container">
+          <div class="logo" id="date">
+            <h1>Day Maker</h1>
+            <span id="live-clock"></span>
+          </div>
+          <div class="avatar-profile">
+            <div class="avatar" id="avatar"></div>
+            <div class="avatar-settings" id="avatar-settings">
+              <button class="dark-mode-btn" id="darkModeBtn">
+                <i class="fa-regular fa-sun" id="themeIcon"></i>
+                <span id="themeText">Light Mode</span>
+              </button>
+              <button class="logout-btn">
+                <i class="fa-solid fa-sign-out-alt"></i> Log out
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <div class="page-content active" id="home">
+          <div class="home-container">
+            <div class="greeting section">
+              <h2 id="user-name">welcome back,</h2>
+              <span>quote</span>
+            </div>
+
+            <div class="streak-box section">
+              <div class="streak-content">
+                <div class="streak-icon">
+                  <i class="fa-solid fa-fire"></i>
+                </div>
+                <div class="streak-text">
+                  <h3 id="streak-count">0 Days</h3>
+                  <span>Current Study Streak</span>
+                </div>
+              </div>
+              <button id="complete-study-btn" class="streak-btn">
+                Log Today's Study
+              </button>
+            </div>
+
+            <div class="tasks section">
+              <div class="tasks-header" id="tasks-header">
+                <h3>To do list</h3>
+                <button onclick="openModal()">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+              <div class="tasks-list" id="tasks-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="page-content" id="stats">
+          <div class="stats-container">
+            <div class="tasks-stats section">
+              <div class="tasks-completed"></div>
+              <div class="tasks-incompleted"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="page-content" id="calendar">calender page</div>
+
+        <div class="page-content" id="profile">
+          <div class="avatar-profile">
+            <button
+              onclick="logoutUser()"
+              class="streak-btn"
+              style="margin-left: 10px; background: #ff6b6b"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </main>
+
+      <nav class="mob-nav">
+        <div class="navbar-container">
+          <div class="slider-indicator"></div>
+
+          <button
+            class="mob-navbar-btn active-mob"
+            id="mobile-home-btn"
+            data-page="home"
+            onclick="switchPage('home')"
+          >
+            <i class="fa-solid fa-home"></i>
+            <span>Home</span>
+          </button>
+
+          <button
+            class="mob-navbar-btn"
+            id="mobile-stats-btn"
+            data-page="stats"
+            onclick="switchPage('stats')"
+          >
+            <i class="fa-solid fa-chart-simple"></i>
+            <span>Stats</span>
+          </button>
+
+          <button
+            class="mob-navbar-btn"
+            id="mobile-calendar-btn"
+            data-page="calendar"
+            onclick="switchPage('calendar')"
+          >
+            <i class="fa-solid fa-calendar-day"></i>
+            <span>Calendar</span>
+          </button>
+
+          <button
+            class="mob-navbar-btn"
+            id="mobile-profile-btn"
+            data-page="profile"
+            onclick="switchPage('profile')"
+          >
+            <i class="fa-solid fa-user"></i>
+            <span>Profile</span>
+          </button>
+        </div>
+      </nav>
+
+      <aside class="big-nav">
+        <button
+          class="desk-nav-btn active"
+          data-page="home"
+          onclick="switchPage('home')"
+        >
+          <i class="fa-solid fa-house"></i>
+          <span>Home</span>
+        </button>
+
+        <button
+          class="desk-nav-btn"
+          data-page="stats"
+          onclick="switchPage('stats')"
+        >
+          <i class="fa-solid fa-chart-simple"></i>
+          <span>Stats</span>
+        </button>
+
+        <button
+          class="desk-nav-btn"
+          data-page="calendar"
+          onclick="switchPage('calendar')"
+        >
+          <i class="fa-solid fa-calendar-day"></i>
+          <span>Calendar</span>
+        </button>
+
+        <button
+          class="desk-nav-btn"
+          data-page="profile"
+          onclick="switchPage('profile')"
+        >
+          <i class="fa-solid fa-user"></i>
+          <span>Profile</span>
+        </button>
+      </aside>
+
+      <div class="modal-overlay" id="task-modal">
+        <div class="modal-card">
+          <h2>Add New Task</h2>
+
+          <div class="modal-inputs">
+            <input
+              type="text"
+              id="modal-task-name"
+              placeholder="What do you want to do?"
+            />
+
+            <div class="time-toggle-section">
+              <input type="text" id="modal-task-time" placeholder="10:00 AM" />
+              <label class="switch">
+                <input type="checkbox" id="no-time-checkbox" />
+                <span class="slider"></span>
+              </label>
+              <span class="toggle-text">No Time</span>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button class="modal-btn cancel" onclick="closeModal()">
+              Cancel
+            </button>
+            <button class="modal-btn save" onclick="saveModalTask()">
+              Save Task
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/dashboard.js"></script>
+    <script src="../public/js/dashboard.js"></script>
+  </body>
+</html>
