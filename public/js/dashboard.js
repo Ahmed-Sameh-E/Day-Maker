@@ -1,6 +1,6 @@
-// if (!localStorage.getItem("dashboardUsername")) {
-//   window.location.replace("/");
-// }
+if (!localStorage.getItem("dashboardUsername")) {
+  window.location.replace("/");
+}
 
 const containerElement = document.getElementById("container");
 const tasksList = document.getElementById("tasks-list");
